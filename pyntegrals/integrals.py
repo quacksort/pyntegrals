@@ -1,3 +1,7 @@
+# Pyntegrals - Copyright (C) 2022, Lucia Giorgi (quacksort)
+# https://github.com/nekobanana/pyntegrals
+# Contact me at quacksort@gmail.com
+
 import numbers
 from typing import Callable, Union
 
@@ -20,11 +24,11 @@ def integrate_over_polygon(function: Union[Callable, float], polygon: list[tuple
             0, int_x,
             lambda x: 0, lambda x: __line_from_axis_intersection(int_x, int_y, x))
         r += tmp[0]
-    return -r
+    return r
 
 
 def __lintrasf(triangle: geometry.Polygon):
-    coords = np.array(geometry.polygon.orient(triangle, sign=-1).exterior.coords)
+    coords = np.array(geometry.polygon.orient(triangle, sign=1).exterior.coords)
     transl_vect = coords[0]
     w1 = np.array(coords[1] - transl_vect)
     vers_w1 = w1 / (w1 ** 2).sum() ** 0.5

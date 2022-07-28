@@ -1,4 +1,4 @@
-from pyntegrals import integrate_over_polygon
+from pyntegrals.integrals import integrate_over_polygon
 
 
 def main():

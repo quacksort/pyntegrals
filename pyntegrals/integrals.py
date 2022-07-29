@@ -11,12 +11,53 @@ from scipy import integrate
 from shapely import geometry
 
 
-def integrate_over_polygon(function: Union[Callable, float], polygon: list[tuple]):
+def integrate_over_polygon(function: Union[Callable, float], polygon: list[tuple]) -> float:
+    """
+        Computes the integral of a two-variables function over a polygonal domain in :math:`R^2`.
+
+        Returns the definite integral of ``function(x, y)`` = :math:`f(x,y)` over
+        ``polygon`` = :math:`\\Sigma`, that is:
+
+        :math:`\\int_{\\Sigma} f(x, y) \\, d\\Sigma`.
+
+        Parameters
+        ----------
+        function : Union[Callable, float]
+            A scalar or a Python function with two arguments: the first one is x and the
+            second one is y in R^2 space.
+
+        polygon: list[tuple]
+            A polygon defined by a list of its vertices. Each vertex is
+            described by a tuple containing its coordinated in the form (x, y).
+            The vertices in the list must be in clockwise or
+            counter-clockwise order (it makes no difference)
+
+        Returns
+        -------
+        r : float
+            The definite integral of ``function(x, y)`` over ``polygon``.
+
+        Example
+        --------
+        Compute the integral of ``x**2 + y`` over a 50 x 40 rectangle :math:`\\Sigma` with a
+        vertex in (0, 0) and another in (50, 40)
+
+        :math:`\\int_{\\Sigma} (x^2 + y) \\, d\\Sigma`.
+
+        >>> from pyntegrals.integrals import integrate_over_polygon
+        >>> polygon = [(0, 0), (50, 0), (50, 40), (0, 40)]
+        >>> rho = lambda x, y: x**2 + y
+        >>> mass = integrate_over_polygon(function=rho, polygon=polygon)
+            1706666.666666667
+
+        For more example see examples/example.py
+
+    """
     f = function
     if isinstance(function, numbers.Number):
         f = lambda x, y: function
     triangles = tripy.earclip(polygon)
-    r = 0
+    r: float = 0
     for triangle in triangles:
         int_x, int_y, A, t = __lintrasf(geometry.Polygon(triangle))
         tmp = integrate.dblquad(
